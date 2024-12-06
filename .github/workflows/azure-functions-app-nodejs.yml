@@ -2,10 +2,11 @@ name: Deploy Azure Function App
 
 on:
   push:
-    branches: ["dev", "main"]
+    branches: ["main"]
   workflow_dispatch:
 
 env:
+  AZURE_FUNCTIONAPP_NAME: "racinecourtwatchscraper"
   AZURE_FUNCTIONAPP_PACKAGE_PATH: "."
   NODE_VERSION: "20.x"
 
@@ -13,11 +14,6 @@ jobs:
   build-and-deploy-test:
     runs-on: ubuntu-latest
     environment: test
-    if: github.ref == 'refs/heads/dev'
-
-    env:
-      AZURE_FUNCTIONAPP_NAME: "racinecourtwatchscraper"
-
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
@@ -47,11 +43,7 @@ jobs:
   build-and-deploy-prod:
     runs-on: ubuntu-latest
     environment: production
-    if: github.ref == 'refs/heads/main'
-
-    env:
-      AZURE_FUNCTIONAPP_NAME: "racinecourtwatchscraper"
-
+    needs: build-and-deploy-test
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
