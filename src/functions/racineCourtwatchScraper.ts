@@ -1,10 +1,15 @@
 import { app, InvocationContext, Timer } from "@azure/functions";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function racineCourtwatchScraper(
   myTimer: Timer,
   context: InvocationContext
 ): Promise<void> {
-  context.log("Timer function processed request", JSON.stringify(myTimer));
+  context.log("Timer function processed request");
+  const caseCount = await prisma.case.count();
+  context.log(`DB connected - Case count: ${caseCount}`);
 }
 
 app.timer("racineCourtwatchScraper", {
