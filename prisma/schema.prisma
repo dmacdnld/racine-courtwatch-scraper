@@ -1,0 +1,238 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Activity {
+  ActivityId                      String   @id(map: "PK__Activity__45F4A791338CFC64") @default(dbgenerated("newid()"), map: "DF__Activity__Activi__7B5B524B") @db.UniqueIdentifier
+  CreatedAt                       DateTime @db.DateTime
+  CaseID                          String   @db.UniqueIdentifier
+  CourtOfficialID                 String   @db.UniqueIdentifier
+  ActivityDate                    DateTime @db.DateTime
+  Description                     String   @db.NVarChar(250)
+  Location                        String?  @db.NVarChar(250)
+  Prosecutor                      String?  @db.NVarChar(100)
+  InterpeterNeeded                String?  @db.Char(1)
+  InterpeterProvided              String?  @db.Char(1)
+  PSAMentioned                    String?  @db.Char(1)
+  PSAMentionedByDA                String?  @db.Char(1)
+  PSAMentionedByPublicDefender    String?  @db.Char(1)
+  PSAMentionedByJudgeCommissioner String?  @db.Char(1)
+  LastModifiedBy                  String   @db.NVarChar(100)
+  LastModified                    DateTime @db.DateTime
+  PSALevel                        String?  @db.NVarChar(10)
+  PerceivedPaidAttorney           String?  @db.Char(1)
+  DefendantSpoke                  String?  @db.Char(1)
+  DefendantPercievedImpact        String?  @db.NVarChar(Max)
+}
+
+model Case {
+  CaseId      String   @id(map: "PK__Case__6CAE524C6EB0700A") @default(dbgenerated("newid()"), map: "DF__Case__CaseId__7C4F7684") @db.UniqueIdentifier
+  CreatedAt   DateTime @db.DateTime
+  CaseNumber  String   @db.NVarChar(50)
+  defendantID String   @db.UniqueIdentifier
+}
+
+model CaseRecord {
+  CaseRecordId         String   @id(map: "PK__CaseReco__95CD95A9343B4F37") @default(dbgenerated("newid()"), map: "DF__CaseRecor__CaseR__7D439ABD") @db.UniqueIdentifier
+  CreatedAt            DateTime @db.DateTime
+  AdditionalText       String?  @db.NVarChar(500)
+  AttorneyDefenseID    String?  @db.UniqueIdentifier
+  AttorneyProsecutorID String?  @db.UniqueIdentifier
+  CaseID               String   @db.UniqueIdentifier
+  CourtOfficialID      String?  @db.UniqueIdentifier
+  Description          String   @db.NVarChar(500)
+  RecordDate           DateTime @db.DateTime
+  ReleaseConditionID   String?  @db.UniqueIdentifier
+}
+
+model Charge {
+  ChargeId               String    @id(map: "PK__Charge__17FC361B5933ED0C") @default(dbgenerated("newid()"), map: "DF__Charge__ChargeId__7E37BEF6") @db.UniqueIdentifier
+  CreatedAt              DateTime  @db.DateTime
+  CaseID                 String    @db.UniqueIdentifier
+  ChargeNumber           Int
+  ChargeDescription      String    @db.NVarChar(500)
+  DispositionDescription String?   @db.NVarChar(100)
+  OffenseDate            DateTime  @db.DateTime
+  PleaDate               DateTime? @db.DateTime
+  PleaDescrioption       String?   @db.NVarChar(50)
+  Severity               String    @db.NVarChar(50)
+  Statute                String    @db.NVarChar(50)
+}
+
+model Choices {
+  ChoiceID    Int     @id(map: "PK__Choices__76F516866E7BFEE3") @default(autoincrement())
+  ChoiceValue String? @db.NVarChar(50)
+  ChoiceDesc  String? @db.NVarChar(50)
+}
+
+model CountyOfficials {
+  CountyOfficialsId String   @id(map: "PK__CountyOf__657C0CFB8708623B") @default(dbgenerated("newid()"), map: "DF__CountyOff__Count__7F2BE32F") @db.UniqueIdentifier
+  CreatedAt         DateTime @db.DateTime
+  Name              String   @db.NVarChar(100)
+  OfficialTitle     String   @db.NVarChar(100)
+}
+
+model Defendant {
+  DefendantId                String    @id(map: "PK__Defendan__1D61F0FA68B5C897") @default(dbgenerated("newid()"), map: "DF__Defendant__Defen__00200768") @db.UniqueIdentifier
+  Name                       String    @db.NVarChar(100)
+  LastKnownAddress           String?   @db.NVarChar(256)
+  LastKnownAddressDate       DateTime? @db.DateTime
+  IsHoused                   String?   @db.Char(1)
+  DOB                        DateTime  @db.DateTime
+  AssignedSex                String    @db.NVarChar(2)
+  PerceivedGender            String?   @db.NVarChar(10)
+  AssignedRace               String?   @db.NVarChar(100)
+  PerceivedRace              String?   @db.NVarChar(100)
+  IsTrans                    String?   @db.Char(1)
+  IsNonBinary                String?   @db.Char(1)
+  PerceivedMentalHealthIssue String?   @db.Char(1)
+  CreatedAt                  DateTime  @db.DateTime
+  LastModified               DateTime  @db.DateTime
+  LastModifiedBy             String    @db.NVarChar(100)
+}
+
+model DefendantAttorney {
+  DefendantAttorneyId String    @id(map: "PK__Defendan__24AD487D630DB397") @default(dbgenerated("newid()"), map: "DF__Defendant__Defen__01142BA1") @db.UniqueIdentifier
+  CreatedAt           DateTime  @db.DateTime
+  DefendantID         String    @db.UniqueIdentifier
+  Name                String    @db.NVarChar(100)
+  Entered             DateTime  @db.DateTime
+  Withdrawn           DateTime? @db.DateTime
+}
+
+model ObserverUpdates {
+  ObserverUpdates String   @id(map: "PK__Observer__5B01B791721F6C65") @default(dbgenerated("newid()"), map: "DF__ObserverU__Obser__02084FDA") @db.UniqueIdentifier
+  ObserverName    String   @db.NVarChar(100)
+  UpdateDate      DateTime @db.DateTime
+  UpdateType      String   @db.NVarChar(50)
+  CaseID          String   @db.UniqueIdentifier
+}
+
+model ReleaseConditions {
+  ReleaseConditionsId       String   @id(map: "PK__ReleaseC__A55E565D4D40046A") @default(dbgenerated("newid()"), map: "DF__ReleaseCo__Relea__02FC7413") @db.UniqueIdentifier
+  CaseID                    String?  @db.UniqueIdentifier
+  BondType                  String?  @db.NVarChar(50)
+  AmountObservedProsecution Decimal? @db.Decimal(19, 4)
+  AmountObservedDefense     Decimal? @db.Decimal(19, 4)
+  AmountObservedComissioner Decimal? @db.Decimal(19, 4)
+  ActualBondAmount          Decimal? @db.Decimal(19, 4)
+  Arguments                 String?  @db.NVarChar(250)
+  OtherFactors              String?  @db.NVarChar(250)
+  Notes                     String?  @db.NVarChar(250)
+  VictimPerspectiveGiven    String?  @db.NVarChar(100)
+  DACitedReleaseDecision    String?  @db.NVarChar(50)
+  ElementsOfInterest        String?  @db.NVarChar(50)
+}
+
+model report_InitialApperance {
+  InitialApperanceID              Int       @id(map: "PK__report_I__F7598FAD50992FB2") @default(autoincrement())
+  DefendantId                     String    @db.UniqueIdentifier
+  DefendantName                   String    @db.NVarChar(100)
+  CaseId                          String    @db.UniqueIdentifier
+  CaseNumber                      String    @db.NVarChar(50)
+  CourtOfficialID                 String    @db.UniqueIdentifier
+  CourtOfficial                   String?   @db.NVarChar(100)
+  PerceivedPaidAttorney           String?   @db.Char(1)
+  PerceivedRace                   String?   @db.NVarChar(100)
+  PerceivedGender                 String?   @db.NVarChar(10)
+  IsNonBinary                     String?   @db.Char(1)
+  IsTrans                         String?   @db.Char(1)
+  InterpeterNeeded                String?   @db.Char(1)
+  InterpeterProvided              String?   @db.Char(1)
+  IsHoused                        String?   @db.Char(1)
+  PerceivedMentalHealthIssue      String?   @db.Char(1)
+  BondType                        String?   @db.NVarChar(50)
+  AmountObservedProsecution       Decimal?  @db.Decimal(19, 4)
+  AmountObservedDefense           Decimal?  @db.Decimal(19, 4)
+  AmountObservedComissioner       Decimal?  @db.Decimal(19, 4)
+  PSAMentioned                    String?   @db.Char(1)
+  PSAMentionedByDa                String?   @db.Char(1)
+  PSAMentionedBYPublicDefender    String?   @db.Char(1)
+  PSAMentionedByJudgeCommissioner String?   @db.Char(1)
+  PSALevel                        String?   @db.NVarChar(10)
+  BondArguments                   String?   @db.NVarChar(250)
+  OtherBondFactors                String?   @db.NVarChar(250)
+  OtherBondNotes                  String?   @db.NVarChar(250)
+  ElementsOfInterest              String?   @db.NVarChar(50)
+  DACitedReleaseDecision          String?   @db.NVarChar(50)
+  VictimPerspectiveGiven          String?   @db.NVarChar(50)
+  DefendantSpoke                  String?   @db.Char(1)
+  DefendantPercievedImpact        String?   @db.NVarChar(Max)
+  AdditionalCaseRecordNotes       String?   @db.NVarChar(500)
+  ObserverName                    String?   @db.NVarChar(100)
+  LastModifiedResponse            DateTime? @db.DateTime
+  HearingDate                     DateTime? @db.DateTime
+}
+
+model report_InitialApperance_v1 {
+  InitialApperanceID              Int       @id(map: "PK__report_I__F7598FAD1FE33847") @default(autoincrement())
+  HearingDate                     DateTime? @db.DateTime
+  DefendantId                     String    @db.UniqueIdentifier
+  DefendantName                   String    @db.NVarChar(100)
+  CaseId                          String    @db.UniqueIdentifier
+  CaseNumber                      String    @db.NVarChar(50)
+  CourtOfficialID                 String    @db.UniqueIdentifier
+  CourtOfficial                   String?   @db.NVarChar(100)
+  PerceivedPaidAttorney           String?   @db.Char(1)
+  PerceivedRace                   String?   @db.NVarChar(100)
+  PerceivedGender                 String?   @db.NVarChar(10)
+  IsNonBinary                     String?   @db.Char(1)
+  IsTrans                         String?   @db.Char(1)
+  InterpeterNeeded                String?   @db.Char(1)
+  InterpeterProvided              String?   @db.Char(1)
+  IsHoused                        String?   @db.Char(1)
+  PerceivedMentalHealthIssue      String?   @db.Char(1)
+  BondType                        String?   @db.NVarChar(50)
+  AmountObservedProsecution       Decimal?  @db.Decimal(19, 4)
+  AmountObservedDefense           Decimal?  @db.Decimal(19, 4)
+  AmountObservedComissioner       Decimal?  @db.Decimal(19, 4)
+  PSAMentioned                    String?   @db.Char(1)
+  PSAMentionedByDa                String?   @db.Char(1)
+  PSAMentionedBYPublicDefender    String?   @db.Char(1)
+  PSAMentionedByJudgeCommissioner String?   @db.Char(1)
+  PSALevel                        String?   @db.NVarChar(10)
+  BondArguments                   String?   @db.NVarChar(250)
+  OtherBondFactors                String?   @db.NVarChar(250)
+  OtherBondNotes                  String?   @db.NVarChar(250)
+  AdditionalCaseRecordNotes       String?   @db.NVarChar(500)
+  ObserverName                    String?   @db.NVarChar(100)
+  LastModifiedResponse            DateTime? @db.DateTime
+}
+
+model survey {
+  surveyid      Int       @id @default(autoincrement())
+  surveyname    String    @db.NVarChar(255)
+  surveyversion String    @db.NVarChar(25)
+  startdate     DateTime  @db.Date
+  enddate       DateTime? @db.Date
+}
+
+model surveyanswers {
+  surveyanswerid   String  @id @default(dbgenerated("newid()"), map: "DF__surveyans__surve__03F0984C") @db.UniqueIdentifier
+  surveyresponseid Int
+  surveyquestionid Int
+  responsetext     String? @db.NVarChar(Max)
+}
+
+model surveyquestion {
+  surveyquestionid  Int      @id @default(autoincrement())
+  surveyid          Int
+  questiontext      String   @db.NVarChar(Max)
+  section           String?  @db.NVarChar(255)
+  sortorder         Int?
+  mandatoryquestion Boolean? @default(false, map: "DF__surveyque__manda__04E4BC85")
+  inputtype         String?  @db.NVarChar(50)
+}
+
+model surveyresponses {
+  surveyresponseid Int      @id @default(autoincrement())
+  surveyid         Int
+  respondentname   String?  @db.NVarChar(255)
+  responsedate     DateTime @db.Date
+}
