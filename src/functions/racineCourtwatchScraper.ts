@@ -3,13 +3,19 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+async function testDbConnection(context) {
+  const caseCount = await prisma.case.count();
+  context.log(`DB connected - Case count: ${caseCount}`);
+}
+
 export async function racineCourtwatchScraper(
   myTimer: Timer,
   context: InvocationContext
 ): Promise<void> {
   context.log("Timer function processed request");
-  const caseCount = await prisma.case.count();
-  context.log(`DB connected - Case count: ${caseCount}`);
+  testDbConnection(context).catch((error) => {
+    context.error(error);
+  });
 }
 
 app.timer("racineCourtwatchScraper", {
