@@ -3,7 +3,8 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function testDbConnection(context) {
+async function testDbConnection(context: InvocationContext) {
+  context.log(`Testing DB connection`);
   const caseCount = await prisma.case.count();
   context.log(`DB connected - Case count: ${caseCount}`);
 }
@@ -14,7 +15,7 @@ export async function racineCourtwatchScraper(
 ): Promise<void> {
   context.log("Timer function processed request");
   testDbConnection(context).catch((error) => {
-    context.error(error);
+    context.error(`DB connection failed: ${error}`);
   });
 }
 
