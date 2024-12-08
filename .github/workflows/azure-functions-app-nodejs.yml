@@ -3,6 +3,8 @@ name: Deploy Azure Function App
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
   workflow_dispatch:
 
 env:
@@ -44,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     needs: build-and-deploy-test
+    if: github.event_name == 'push'
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
