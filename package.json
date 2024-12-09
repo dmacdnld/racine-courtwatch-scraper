@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@azure/functions": "^4.6.0",
-    "@prisma/client": "^6.0.1"
+    "@prisma/client": "^6.0.1",
+    "playwright": "^1.49.0"
   },
   "devDependencies": {
     "@types/node": "^22.x",
