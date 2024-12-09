@@ -16,6 +16,8 @@ jobs:
   build-and-deploy-test:
     runs-on: ubuntu-latest
     environment: test
+    env:
+      DATABASE_SECRET: ${{ secrets.DATABASE_URL }}
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
@@ -45,6 +47,8 @@ jobs:
   build-and-deploy-prod:
     runs-on: ubuntu-latest
     environment: production
+    env:
+      DATABASE_SECRET: ${{ secrets.DATABASE_URL }}
     needs: build-and-deploy-test
     if: github.event_name == 'push'
     steps:
