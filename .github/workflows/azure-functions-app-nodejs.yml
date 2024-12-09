@@ -15,7 +15,10 @@ env:
 jobs:
   build-and-deploy-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     environment: test
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v4
@@ -24,12 +27,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
       - name: "Resolve Project Dependencies Using Npm"
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
+          npm ci
           npm run build --if-present
           npm run test --if-present
           popd
@@ -44,7 +48,10 @@ jobs:
 
   build-and-deploy-prod:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     environment: production
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
     needs: build-and-deploy-test
     if: github.event_name == 'push'
     steps:
@@ -55,12 +62,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
 
       - name: "Resolve Project Dependencies Using Npm"
         shell: bash
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
+          npm ci
           npm run build --if-present
           npm run test --if-present
           popd
