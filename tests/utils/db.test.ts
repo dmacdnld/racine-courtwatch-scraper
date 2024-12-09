@@ -10,7 +10,7 @@ const invocationContextMock = {
   error: () => {},
 } as InvocationContext;
 
-// Temporary test to check DB connection
+// Temporary test to check DB connection until real e2e tests are added
 test("getCaseCount", async (t) => {
   await t.test("should return a case count", async () => {
     const result = await getCaseCount(invocationContextMock);
