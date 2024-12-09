@@ -3,7 +3,7 @@ import assert from "node:assert";
 
 import { InvocationContext } from "@azure/functions";
 
-import { getCaseCount } from "../../src/utils/db";
+import { canAccessDB } from "../../src/utils/db";
 
 const invocationContextMock = {
   log: () => {},
@@ -13,7 +13,7 @@ const invocationContextMock = {
 // Temporary test to check DB connection until real e2e tests are added
 test("getCaseCount", async (t) => {
   await t.test("should return a case count", async () => {
-    const result = await getCaseCount(invocationContextMock);
-    assert.strictEqual(typeof result, "number");
+    const result = await canAccessDB(invocationContextMock);
+    assert.strictEqual(result, true);
   });
 });
