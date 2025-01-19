@@ -13,6 +13,6 @@ export async function racineCourtwatchScraper(
 
 app.timer("racineCourtwatchScraper", {
   // Run Mon-Fri @ 11:30 am & 12:30 pm CT to account for DST
-  schedule: "0 30 17-18 * * 1-5",
+  schedule: "* */1 * * * *",
   handler: racineCourtwatchScraper,
 });
