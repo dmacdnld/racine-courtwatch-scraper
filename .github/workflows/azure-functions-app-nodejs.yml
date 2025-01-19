@@ -37,6 +37,8 @@ jobs:
           npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
+          mkdir -p ./node_modules/.playwright/firefox
+          cp -r /home/runner/.cache/ms-playwright/firefox-* ./node_modules/.playwright/firefox/
           popd
 
       - name: "Run Azure Functions Action"
@@ -75,6 +77,8 @@ jobs:
           npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
+          mkdir -p ./node_modules/.playwright/firefox
+          cp -r /home/runner/.cache/ms-playwright/firefox-* ./node_modules/.playwright/firefox/
           popd
 
       - name: "Run Azure Functions Action"
