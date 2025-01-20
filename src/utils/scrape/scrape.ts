@@ -27,7 +27,7 @@ async function launchBrowser(context: InvocationContext) {
     context.log("[launchBrowser] - Browser launch finished");
     return { browser, browserContext };
   } catch (error) {
-    context.error(error);
+    context.error("[launchBrowser] - Browser launch failed:", error);
   }
 }
 
