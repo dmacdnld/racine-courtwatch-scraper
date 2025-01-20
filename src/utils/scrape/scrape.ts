@@ -21,10 +21,14 @@ async function launchBrowser(context: InvocationContext) {
   const browserMode = process.env.PLAYWRIGHT_BROWSER_MODE ?? "headless";
   context.log("[launchBrowser] - Browser launch mode:", browserMode);
   const isHeadless = browserMode !== "headed";
-  const browser = await firefox.launch({ headless: isHeadless });
-  const browserContext = await browser.newContext();
-  context.log("[launchBrowser] - Browser launch finished");
-  return { browser, browserContext };
+  try {
+    const browser = await firefox.launch({ headless: isHeadless });
+    const browserContext = await browser.newContext();
+    context.log("[launchBrowser] - Browser launch finished");
+    return { browser, browserContext };
+  } catch (error) {
+    context.error(error);
+  }
 }
 
 async function closeBrowser(
