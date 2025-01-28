@@ -37,7 +37,9 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
-          chmod -R 755 node_modules/playwright-core/.local-browsers
+          ls -l $(find ./node_modules/.playwright-core -name "firefox")
+          sudo chmod -R 755 ./node_modules/playwright-core/.local-browsers/
+          ls -l $(find ./node_modules/.playwright-core -name "firefox")
           zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           popd
 
@@ -75,6 +77,7 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
+          sudo chmod -R +x /home/site/wwwroot/node_modules/playwright-core/.local-browsers
           zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           popd
 
