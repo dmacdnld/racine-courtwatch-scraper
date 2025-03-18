@@ -34,11 +34,9 @@ jobs:
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm ci
-          PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps firefox
+          npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
-          sudo chmod -R +x {{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/node_modules/playwright-core/.local-browsers
-          cp -r {{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/node_modules/playwright-core/.local-browsers/* .playwright-browsers/
           zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
           popd
 
@@ -73,7 +71,7 @@ jobs:
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           npm ci
-          PLAYWRIGHT_BROWSERS_PATH=0 npx playwright install --with-deps firefox
+          npx playwright install --with-deps firefox
           npm run build --if-present
           npm run test --if-present
           zip -r functionapp.zip ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
