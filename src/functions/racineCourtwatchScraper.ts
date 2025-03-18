@@ -28,9 +28,11 @@ export async function httpTrigger1(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
-    context.log("HTTP function processing request");
+    context.log("Scraping started");
     await scrape(context);
-    context.log("HTTP function processed request");
+    context.log("Scraping finished");
+  } catch (error) {
+    context.error("Scraping failed", error);
   } finally {
     return { status: 200 };
   }

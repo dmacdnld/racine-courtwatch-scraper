@@ -12,6 +12,8 @@
   },
   "dependencies": {
     "@azure/functions": "^4.6.0",
+    "@azure/identity": "^4.8.0",
+    "@azure/keyvault-secrets": "^4.9.0",
     "@prisma/client": "^6.0.1",
     "playwright": "^1.49.0"
   },
