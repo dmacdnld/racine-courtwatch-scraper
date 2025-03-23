@@ -1,18 +1,12 @@
 import { InvocationContext } from "@azure/functions";
-import { DefaultAzureCredential } from "@azure/identity";
-import { SecretClient } from "@azure/keyvault-secrets";
 import { Browser, BrowserContext, firefox } from "playwright";
+
+import { getSecret } from "./secrets";
 
 async function fetchBrowserlessApiToken(context: InvocationContext) {
   context.log("[fetchBrowserlessApiToken] - API token requested");
-  const credential = new DefaultAzureCredential();
-  const vaultName = "racinecourtwatchscraper";
-  const secretName = "BrowserlessApiToken";
-  const url = `https://${vaultName}.vault.azure.net`;
-  const client = new SecretClient(url, credential);
-
   try {
-    const secret = await client.getSecret(secretName);
+    const secret = await getSecret(context, "BrowserlessApiToken");
     const apiToken = secret.value;
     context.log("[fetchBrowserlessApiToken] - API token retrieved");
     return apiToken;
