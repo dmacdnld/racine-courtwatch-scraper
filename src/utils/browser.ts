@@ -17,25 +17,30 @@ async function fetchBrowserlessApiToken(context: InvocationContext) {
     context.log("[fetchBrowserlessApiToken] - API token retrieved");
     return apiToken;
   } catch (error) {
-    context.error("[fetchBrowserlessApiToken] - API token retrieval failed:", error);
+    context.error(
+      "[fetchBrowserlessApiToken] - API token retrieval failed:",
+      error
+    );
   }
 }
 
 export async function launchBrowser(context: InvocationContext) {
   context.log("[launchBrowser] - Browser launch requested");
-  const browserMode = process.env.PLAYWRIGHT_BROWSER_MODE ?? "headless";
-  context.log("[launchBrowser] - Browser launch mode:", browserMode);
   try {
     let browser: Browser;
 
-    if (process.env.NODE_ENV === "production") {
-      context.log("[launchBrowser] - Browser launch mode:", browserMode);
+    if (
+      process.env.NODE_ENV === "production" ||
+      process.env.NODE_ENV === "staging"
+    ) {
+      context.log("[launchBrowser] - Local Firefox launch requested");
+      browser = await firefox.launch();
+    } else {
       const apiToken = await fetchBrowserlessApiToken(context);
+      context.log("[launchBrowser] - Browserless Firefox launch requested");
       browser = await firefox.connect(
         `wss://production-sfo.browserless.io/firefox/playwright?token=${apiToken}&proxy=residential`
       );
-    } else {
-      browser = await firefox.launch();
     }
 
     const browserContext = await browser.newContext();
