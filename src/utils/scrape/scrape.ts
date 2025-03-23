@@ -1,7 +1,7 @@
 import { InvocationContext } from "@azure/functions";
 import { type Browser, type BrowserContext, firefox } from "playwright";
 
-import { searchByCourtCalendar } from "./calendarSearch";
+import { searchByCourtCalendar } from "./calendar-search";
 import { closeBrowser, launchBrowser } from "../browser";
 
 export async function scrape(context: InvocationContext) {
