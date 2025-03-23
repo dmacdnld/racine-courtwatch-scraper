@@ -6,7 +6,7 @@ import {
   Timer,
 } from "@azure/functions";
 
-import { scrape } from "../utils/scrape";
+import { scrape } from "../utils/scrape/scrape";
 import { getSecret } from "../utils/secrets";
 
 export async function timerTrigger(
