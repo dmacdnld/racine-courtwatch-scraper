@@ -33,10 +33,12 @@ export async function httpTrigger(
   context: InvocationContext
 ): Promise<HttpResponseInit> {
   try {
+    const requestApiTestToken = request.headers.get("API-Test-Token")
     const apiTestTokenSecret = await getSecret(context, "ApiTestToken");
     if (
       apiTestTokenSecret.value === undefined ||
-      request.headers.get("API-Test-Token") !== apiTestTokenSecret.value
+      requestApiTestToken === null ||
+      requestApiTestToken !== apiTestTokenSecret.value
     ) {
       context.error("Unauthorized request");
       return { status: 403 };
