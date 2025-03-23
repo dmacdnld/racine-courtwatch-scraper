@@ -16,7 +16,7 @@ export async function timerTrigger(
   try {
     context.log("[timerTrigger] - Timer trigger execution requested");
     await scrape(context);
-    context.log("[timerTrigger] - Timer trigger execution complete");
+    context.log("[timerTrigger] - Timer trigger execution finished");
   } catch (error) {
     context.error("[timerTrigger] - Timer trigger execution failed", error);
   }
@@ -46,7 +46,7 @@ export async function httpTrigger(
   try {
     context.log("[httpTrigger] - HTTP trigger execution requested");
     await scrape(context);
-    context.log("[httpTrigger] - HTTP trigger execution complete");
+    context.log("[httpTrigger] - HTTP trigger execution finished");
   } catch (error) {
     context.error("[httpTrigger] - HTTP trigger execution failed", error);
   } finally {

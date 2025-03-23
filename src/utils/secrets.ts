@@ -15,9 +15,9 @@ export async function getSecret(
   }
 
   try {
-    context.log("[getSecret] - Vault secret requested");
+    context.log("[getSecret] - Vault secret retrieval requested");
     const secret = await secretClient.getSecret(secretName);
-    context.log("[getSecret] - Vault secret retrieved");
+    context.log("[getSecret] - Vault secret retrieval finished");
     return secret;
   } catch (error) {
     context.error("[getSecret] - Vault secret retrieval failed", error);
