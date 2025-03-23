@@ -1,7 +1,9 @@
 import { InvocationContext } from "@azure/functions";
-import { type Browser, type BrowserContext, firefox } from "playwright";
+import type { Locator, Page } from "playwright";
 
 import { searchByCourtCalendar } from "./calendar-search";
+import { getCasesData } from "./case-search-results";
+
 import { closeBrowser, launchBrowser } from "../browser";
 
 export async function scrape(context: InvocationContext) {
@@ -10,7 +12,7 @@ export async function scrape(context: InvocationContext) {
   const page = await browserContext.newPage();
 
   await searchByCourtCalendar(context, page);
-  // TODO: get cases data
+  const casesData = await getCasesData(context, page);
   // TODO: save cases data
 
   await closeBrowser(context, browser, browserContext);
