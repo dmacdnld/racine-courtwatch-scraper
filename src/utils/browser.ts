@@ -27,14 +27,14 @@ export async function launchBrowser(context: InvocationContext) {
       process.env.NODE_ENV === "production" ||
       process.env.NODE_ENV === "staging"
     ) {
-      context.log("[launchBrowser] - Local Firefox launch requested");
-      browser = await firefox.launch();
-    } else {
       const apiToken = await fetchBrowserlessApiToken(context);
       context.log("[launchBrowser] - Browserless Firefox launch requested");
       browser = await firefox.connect(
         `wss://production-sfo.browserless.io/firefox/playwright?token=${apiToken}&proxy=residential`
       );
+    } else {
+      context.log("[launchBrowser] - Local Firefox launch requested");
+      browser = await firefox.launch();
     }
 
     const browserContext = await browser.newContext();
