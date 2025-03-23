@@ -1,18 +1,63 @@
-import { app, InvocationContext, Timer } from "@azure/functions";
+import {
+  app,
+  HttpRequest,
+  HttpResponseInit,
+  InvocationContext,
+  Timer,
+} from "@azure/functions";
 
 import { scrape } from "../utils/scrape";
+import { getSecret } from "../utils/secrets";
 
-export async function racineCourtwatchScraper(
+export async function timerTrigger(
   myTimer: Timer,
   context: InvocationContext
 ): Promise<void> {
-  context.log("Timer function processing request");
-  await scrape(context);
-  context.log("Timer function processed request");
+  try {
+    context.log("[timerTrigger] - Timer trigger execution requested");
+    await scrape(context);
+    context.log("[timerTrigger] - Timer trigger execution finished");
+  } catch (error) {
+    context.error("[timerTrigger] - Timer trigger execution failed", error);
+  }
 }
 
-app.timer("racineCourtwatchScraper", {
+app.timer("timerTrigger", {
   // Run Mon-Fri @ 11:30 am & 12:30 pm CT to account for DST
   schedule: "0 30 17-18 * * 1-5",
-  handler: racineCourtwatchScraper,
+  handler: timerTrigger,
+});
+
+export async function httpTrigger(
+  request: HttpRequest,
+  context: InvocationContext
+): Promise<HttpResponseInit> {
+  try {
+    const requestApiTestToken = request.headers.get("API-Test-Token")
+    const apiTestTokenSecret = await getSecret(context, "ApiTestToken");
+    if (
+      apiTestTokenSecret.value === undefined ||
+      requestApiTestToken === null ||
+      requestApiTestToken !== apiTestTokenSecret.value
+    ) {
+      context.error("Unauthorized request");
+      return { status: 403 };
+    }
+  } catch (error) {}
+
+  try {
+    context.log("[httpTrigger] - HTTP trigger execution requested");
+    await scrape(context);
+    context.log("[httpTrigger] - HTTP trigger execution finished");
+  } catch (error) {
+    context.error("[httpTrigger] - HTTP trigger execution failed", error);
+  } finally {
+    return { status: 200 };
+  }
+}
+
+app.http("scrape", {
+  methods: ["GET"],
+  authLevel: "anonymous",
+  handler: httpTrigger,
 });

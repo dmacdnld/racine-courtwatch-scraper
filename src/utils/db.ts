@@ -6,12 +6,12 @@ client.$connect();
 
 export async function canAccessDB(context: InvocationContext) {
   try {
-    context.log(`Testing DB connection`);
+    context.log(`[canAccessDB] - Testing DB connection`);
     const caseCount = await client.case.count();
-    context.log(`DB connected - Case count: ${caseCount}`);
+    context.log(`[canAccessDB] - DB connected - Case count: ${caseCount}`);
     return true;
   } catch (error) {
-    context.error(`DB connection failed: ${error}`);
+    context.error(`[canAccessDB] - DB connection failed: ${error}`);
     return false;
   } finally {
     client.$disconnect();
